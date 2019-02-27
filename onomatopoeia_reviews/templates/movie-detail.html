@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <h1>{{ movie.title }}</h1>
+    <ul>
+        <li>Director: {{ movie.director }}</li>
+        <li>Release Date: {{ movie.release_date }}</li>
+    </ul>
+    {% if movie.reviews.all %}
+    <h2>Reviews</h2>
+    <ul>
+        {% for review in movie.reviews.all %}
+        <li>
+            {{ review.content }}
+            <hr>
+            {{ review.created }}
+            {% if review.author %}
+            <hr>
+            {{ review.author.username }}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}
+

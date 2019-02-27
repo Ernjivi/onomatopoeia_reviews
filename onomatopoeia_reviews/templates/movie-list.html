@@ -1,8 +1,11 @@
-<ul>
-{% for movie in movies %}
-    <li>
-    {{ movie.title }} - {{ movie.release_date }} - {{ movie.director }}
-    </li>
-{% endfor %}
-</ul>
-    
+{% extends 'base.html' %}
+
+{% block content %}
+    <ul>
+    {% for movie in movies %}
+        <li>
+            <a href="{% url 'movie-detail' movie.id %}">{{ movie.title }} - {{ movie.release_date }} - {{ movie.director }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
