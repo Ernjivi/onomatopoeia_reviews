@@ -22,3 +22,8 @@ class Review(models.Model):
 
     def __str__(self):
         return '{} review'.format(self.movie.title)
+
+class Vote(models.Model):
+    reviews = models.ManyToManyField(Review, related_name='votes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)

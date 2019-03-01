@@ -25,6 +25,8 @@
             <hr>
             {{ review.author.username }}
             {% endif %}
+            <br>
+            votes: {{ review.votes.count }} | <a href="{% url 'add-vote' review.id %}">Add vote</a>
         </li>
         {% endfor %}
     </ul>

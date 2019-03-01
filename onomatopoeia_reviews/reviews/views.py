@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from reviews.models import Movie
+from reviews.models import Movie, Review, Vote
 from reviews.forms import ReviewForm
 
 
@@ -38,3 +38,9 @@ def movie_detail(request, movie_id):
                 'movie_form': review_form
             } 
             return render(request, 'movie-detail.html', context)
+
+@login_required
+def add_vote(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    review.votes.create(user=request.user)
+    return HttpResponseRedirect(reverse('movie-detail', args=[review.movie_id]))
