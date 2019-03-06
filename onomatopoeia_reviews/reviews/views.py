@@ -1,17 +1,17 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from reviews.models import Movie, Review, Vote
 from reviews.forms import ReviewForm
 
+from django.views.generic import ListView
 
-def movie_list(request):
-    context = {
-        'movies': Movie.objects.all()
-    }
-    return render(request, 'movie-list.html', context)
+
+class MyView(ListView):
+    model = Movie
+    template_name = 'movie-list.html'
 
 @login_required
 def movie_detail(request, movie_id):

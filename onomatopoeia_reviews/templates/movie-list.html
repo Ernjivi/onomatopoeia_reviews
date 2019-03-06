@@ -2,7 +2,7 @@
 
 {% block content %}
     <ul>
-    {% for movie in movies %}
+    {% for movie in movie_list %}
         <li>
             <a href="{% url 'movie-detail' movie.id %}">{{ movie.title }} - {{ movie.release_date }} - {{ movie.director }}</a>
         </li>
