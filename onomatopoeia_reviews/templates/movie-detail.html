@@ -7,12 +7,8 @@
         <li>Director: {{ movie.director }}</li>
         <li>Release Date: {{ movie.release_date }}</li>
     </ul>
-    <h2>Add a new review</h2>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ movie_form.as_p }}
-        <button type="submit">Add new review</button>
-    </form>
+    <a href="{% url 'create-review' movie.id %}">Add a new review</a>
+    
     {% if movie.reviews.all %}
     <h2>Reviews</h2>
     <ul>

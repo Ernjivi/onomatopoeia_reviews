@@ -2,42 +2,41 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from reviews.models import Movie, Review, Vote
 from reviews.forms import ReviewForm
 
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, CreateView
 
 
 class MyView(ListView):
     model = Movie
     template_name = 'movie-list.html'
 
-@login_required
-def movie_detail(request, movie_id):
-    if request.method == 'GET':
-        context = {
-           'movie': get_object_or_404(Movie, pk=movie_id),
-           'movie_form': ReviewForm()
-        }
-        # try:
-        #     movie = Movie.objects.get(pk=movie_id)
-        # except Movie.DoesNotExist:
-        #     return Http404()
-        return render(request, 'movie-detail.html', context)
-    elif request.method == 'POST':
-        review_form = ReviewForm(request.POST)
-        if review_form.is_valid():
-            review = review_form.save(commit=False)
-            review.movie_id = movie_id
-            review.save()
-            return HttpResponseRedirect(reverse('movie-detail', args=[movie_id]))
-        else:
-            context = {
-                'movie': get_object_or_404(Movie, pk=movie_id),
-                'movie_form': review_form
-            } 
-            return render(request, 'movie-detail.html', context)
+class MovieDetail(DetailView):
+    model = Movie
+    template_name = 'movie-detail.html'
+
+@method_decorator(login_required, name='dispatch')
+class ReviewCreate(CreateView):
+    model = Review
+    fields = ['content']
+    
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        self.movie_id = kwargs['movie_id']
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save(commit=False)
+        self.object.movie_id = self.movie_id
+        self.object.save()
+        return HttpResponseRedirect(reverse('movie-detail', args=[self.movie_id]))
+
+
+
 
 @login_required
 def add_vote(request, review_id):
