@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from reviews.models import Movie, Review, Vote
 from reviews.forms import ReviewForm
 
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, View
 
 
 class MyView(ListView):
@@ -36,10 +36,10 @@ class ReviewCreate(CreateView):
         return HttpResponseRedirect(reverse('movie-detail', args=[self.movie_id]))
 
 
-
-
-@login_required
-def add_vote(request, review_id):
-    review = get_object_or_404(Review, pk=review_id)
-    review.votes.create(user=request.user)
-    return HttpResponseRedirect(reverse('movie-detail', args=[review.movie_id]))
+@method_decorator(login_required, name='dispatch')
+class AddVote(View):
+    def get(self, request, *args, **kwargs):
+        review_id = kwargs['review_id']
+        review = get_object_or_404(Review, pk=review_id)
+        review.votes.create(user=self.request.user)
+        return HttpResponseRedirect(reverse('movie-detail', args=[review.movie_id]))
