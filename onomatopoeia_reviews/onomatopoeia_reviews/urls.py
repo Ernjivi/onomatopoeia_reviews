@@ -6,6 +6,7 @@ from django.contrib.auth.views import LoginView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('movies/', include('reviews.urls')),
+    path('api/', include('reviews.api_urls')),
     path('login/', LoginView.as_view(template_name='login.html')),
 ]
 
