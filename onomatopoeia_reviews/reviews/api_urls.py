@@ -3,7 +3,7 @@ from reviews import views
 
 router = DefaultRouter()
 router.register('movies', views.MovieViewSet)
-
+router.register('reviews', views.ReviewViewSet)
 urlpatterns = router.urls
 
 # from django.urls import path
